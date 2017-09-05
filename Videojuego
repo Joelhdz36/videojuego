@@ -1,0 +1,1652 @@
+int screen;
+int x, y, w, h, z, uno, dos;
+int colorButton;
+int turn = 1;
+int c = 1;
+int c1 = #FFFFFF;
+int c2 = #FFFFFF;
+int c3 = #FFFFFF;
+int c4 = #FFFFFF;
+int c5 = #FFFFFF;
+int c6 = #FFFFFF;
+int seleccion = #1854F2;
+String nombre;
+float pos, vel;
+float acel = 1.5;
+float dacel = 0.99;
+int[] vida = new int[7];
+int[] atq = new int[7];
+int[] vidaDos = new int[7];
+int[] atqDos = new int[7];
+String[] nombres = new String[7];
+String[] nombresD = new String[7];
+int suerte;
+
+
+
+void setup()
+{
+  size(900, 600);
+  lego = new personaje(130, 10);
+  botella = new personaje(100, 15);
+  inyeccion = new personaje(90, 13);
+  leche = new personaje(100, 12);
+  diaper = new personaje(110, 11);
+  cartera = new personaje(120, 10);
+  vida[1] = lego.hp;
+  vida[2] = botella.hp;
+  vida[3] = inyeccion.hp;
+  vida[4] = leche.hp;
+  vida[5] = diaper.hp;
+  vida[6] = cartera.hp;
+  atq[1] = lego.atk;
+  atq[2] = botella.atk;
+  atq[3] = inyeccion.atk;
+  atq[4] = leche.atk;
+  atq[5] = diaper.atk;
+  atq[6] = cartera.atk;
+  vidaDos[1] = lego.hp;
+  vidaDos[2] = botella.hp;
+  vidaDos[3] = inyeccion.hp;
+  vidaDos[4] = leche.hp;
+  vidaDos[5] = diaper.hp;
+  vidaDos[6] = cartera.hp;
+  atqDos[1] = lego.atk;
+  atqDos[2] = botella.atk;
+  atqDos[3] = inyeccion.atk;
+  atqDos[4] = leche.atk;
+  atqDos[5] = diaper.atk;
+  atqDos[6] = cartera.atk;
+  nombres[1] = "Indifferent LEGO block";
+  nombres[2] = "Drunk broken bottle";
+  nombres[3] = "Infected needle";
+  nombres[4] = "Rotten milk";
+  nombres[5] = "Dirty diaper";
+  nombres[6] = "Empty wallet";
+  nombresD[1] = "Indifferent LEGO block";
+  nombresD[2] = "Drunk broken bottle";
+  nombresD[3] = "Infected needle";
+  nombresD[4] = "Rotten milk";
+  nombresD[5] = "Dirty diaper";
+  nombresD[6] = "Empty wallet";
+}
+
+void draw()
+{
+  pantallas();
+  colorear();
+  println(uno);
+}
+
+
+
+void mouseReleased()
+{
+  if ((mouseX >= x & mouseX <= x+w) && (mouseY >= y & mouseY <= y+h) && screen < 3) 
+  {
+    screen++;
+  }
+  if ((mouseX >= x & mouseX <= x+w) && (mouseY >= y & mouseY <= y+h) && uno != 0 & dos != 0 && screen == 3)
+  {
+    screen++;
+  }
+
+
+  if ((screen == 4) & (mouseX >= 375 & mouseX <= 525) & (mouseY >= 500 & mouseY <= 550))
+  {
+    turno();
+
+
+    if (turn == 1 && screen == 4)
+    {
+
+      atq[uno] += suerte;
+
+
+      atacar();
+    }
+    if (turn == 2 && screen == 4)
+    {
+      atqDos[dos] += suerte; 
+
+      atacar();
+    }
+
+    if (screen == 5 && (mouseX >= 225 & mouseX <= 375) & (mouseY >= 500 & mouseY >= 550))
+    {
+      screen = 0;
+    }
+  }
+}
+void pantallas()
+{
+  switch(screen)
+  {
+  case 0:
+    inicio();
+    break;
+
+  case 1:
+    instrucciones();
+    break;
+
+  case 2:
+    instrucciones1();
+    break;
+
+  case 3:
+    Peleccion();
+    break;
+
+  case 4:
+    pelea();
+    break;
+
+  case 5:
+    resultado();
+    break;
+  }
+}
+
+void inicio()
+{
+  background(#348CF5);
+  textAlign(CENTER);
+  textSize(90);
+  text("DARK LIFE", 450, 300);
+  textAlign(CENTER, TOP);
+  textSize(20);
+  fill(#FFFFFF);
+  text("Presiona Enter para continuar", 450, 500);
+  if (key == ENTER)
+  {
+    screen ++;
+  }
+}
+
+void instrucciones()
+{
+  x =600;
+  y = 500;
+  w = 150;
+  h = 50;
+  String a = "Para poder jugar, los dos jugadores deberán elegir un personaje con los cuales combatirán hasta que la vida de alguno de los dos llegue a 0 o sea aumentada hasta 140";
+  noStroke();
+  background(#17212C);
+  fill(colorButton);
+  rect(x, y, w, h);
+  fill(#D1D2D3);
+  textAlign(CENTER, CENTER);
+  textSize(40);
+  text(a, 100, 50, 700, 400);
+  fill(0);
+  textSize(20);
+  text("Siguiente", 675, 520);
+}
+
+void instrucciones1()
+{
+  x =600;
+  y = 500;
+  w = 150;
+  h = 50;
+  String a = "En la pantalla de batalla cada jugador debera girar una ruleta una vez cada turno antes de atacar. La ruleta aumentará o disminuirá el ataque lo cual afectará el resultado final";
+  noStroke();
+  background(#17212C);
+  fill(colorButton);
+  rect(x, y, w, h);
+  fill(#D1D2D3);
+  textAlign(CENTER, CENTER);
+  textSize(40);
+  text(a, 100, 50, 700, 400);
+  fill(0);
+  textSize(20);
+  text("Siguiente", 675, 520);
+}
+
+void Peleccion()
+{
+  x =600;
+  y = 500;
+  w = 150;
+  h = 50;
+  background(#17212C); 
+  fill(#FFFFFF);
+  rectangulos();
+  if (uno > 0 & dos > 0)
+  {
+    fill(colorButton);
+    rect(x, y, w, h);
+    fill(255);
+    textSize(30);
+    text("Da click para jugar", 350, 530);
+    text("Jugar", 675, 535);
+    c = 9;
+  }
+}
+
+void pelea()
+{
+  x = 375;
+  y = 500;
+  w = 150;
+  h = 50;
+  rect(x, y, w, h);
+  background(255);
+  ruleta();
+
+
+  switch(uno)
+  {
+  case 1:
+
+    lego.lego();
+    text("vida:", 100, 370);
+    text("atq:", 100, 400);
+    text(vida[1], 170, 370);
+    text(atq[1], 170, 400);
+    textSize(20);
+    text(nombres[uno],150,100);
+    break;
+
+  case 2:
+    botella.botella();
+    text("vida:", 100, 400);
+    text("atq:", 100, 430);
+    text(vida[2], 170, 400);
+    text(atq[2], 170, 430);
+    textSize(20);
+    text(nombres[uno],150,100);
+    break;
+
+  case 3:
+    inyeccion.inyeccion();
+    text("vida:", 100, 370);
+    text("atq:", 100, 400);
+    text(vida[3], 170, 370);
+    text(atq[3], 170, 400);
+    textSize(20);
+    text(nombres[uno],150,100);
+    break;
+
+  case 4:
+    leche.leche();
+    text("vida:", 100, 400);
+    text("atq:", 100, 430);
+    text(vida[4], 170, 400);
+    text(atq[4], 170, 430);
+    textSize(20);
+    text(nombres[uno],150,100);
+    break;
+
+  case 5:
+    diaper.diaper();
+    text("vida:", 100, 370);
+    text("atq:", 100, 400);
+    text(vida[5], 170, 370);
+    text(atq[5], 170, 400);
+    textSize(20);
+    text(nombres[uno],150,100);
+    break;
+
+  case 6:
+    cartera.cartera();
+    text("vida:", 100, 370);
+    text("atq:", 100, 400);
+    text(vida[6], 170, 370);
+    text(atq[6], 170, 400);
+    textSize(20);
+    text(nombres[uno],150,100);
+    break;
+  }
+
+  switch(dos)
+  {
+  case 1:
+    lego.lego();
+    text("vida:", 700, 370);
+    text("atq:", 700, 400);
+    text(vidaDos[1], 770, 370);
+    text(atqDos[dos], 770, 400);textSize(20);
+    textSize(20);
+    text(nombresD[dos],730,100);
+    break;
+
+  case 2:
+    botella.botella();
+    text("vida:", 700, 370);
+    text("atq:", 700, 400);
+    text(vidaDos[2], 770, 370);
+    text(atqDos[2], 770, 400);
+    textSize(20);
+    text(nombresD[dos],730,100);
+    break;
+
+  case 3:
+    inyeccion.inyeccion();
+    text("vida:", 700, 370);
+    text("atq:", 700, 400);
+    text(vidaDos[3], 770, 370);
+    text(atqDos[3], 770, 400);
+    textSize(20);
+    text(nombresD[dos],730,100);
+    break;
+
+  case 4:
+    leche.leche();
+    text("vida:", 700, 400);
+    text("atq:", 700, 430);
+    text(vidaDos[dos], 770, 400);
+    text(atqDos[dos], 770, 430);
+    textSize(20);
+    text(nombresD[dos],730,100);
+    break;
+
+  case 5:
+    diaper.diaper();
+    text("vida:", 700, 370);
+    text("atq:", 700, 400);
+    text(vidaDos[dos], 770, 370);
+    text(atqDos[dos], 770, 400);
+    textSize(20);
+    text(nombresD[dos],730,100);
+    break;
+
+  case 6:
+    cartera.cartera();
+    text("vida:", 700, 370);
+    text("atq:", 700, 400);
+    text(vidaDos[dos], 770, 370);
+    text(atqDos[dos], 770, 400);
+    textSize(20);
+    text(nombresD[dos],730,100);
+    break;
+  }
+}
+
+void resultado()
+{
+  background(#17212C);
+  if(vida[uno] >= 140 && vidaDos[dos] < 140)
+  {
+     textSize(50);
+    fill(#FFFFFF);
+    text("Jugador 1 has ganado", width/2, height/2);
+  }
+    if(vidaDos[dos] >= 140 && vida[uno] < 140)
+  {
+    textSize(50);
+    fill(#FFFFFF);
+    text("Jugador 2 has ganado", width/2, height/2);
+  }
+ 
+ if(vidaDos[dos] <= 0)
+ {
+    textSize(50);
+    fill(#FFFFFF);
+    text("Jugador 1 has ganado", width/2, height/2);
+ }
+ if(vida[uno] <= 0)
+ {
+    textSize(50);
+    fill(#FFFFFF);
+    text("Jugador 2 has ganado", width/2, height/2);
+ }
+  
+  textSize(15);
+  fill(#FFFFFF);
+  text("Presiona Q para ir al inicio", width/4, 500);
+
+  textSize(15);
+  fill(#FFFFFF);
+  text("Presiona P para elegir otro personaje", 600, 500);
+
+  if (key == 'q')
+  {
+    screen = 0;
+  }
+
+  if (key == 'p')
+  {
+    screen = 3; 
+    uno = 0;
+    dos = 0;
+    c = 1;
+    vida[1] = lego.hp;
+    vida[2] = botella.hp;
+    vida[3] = inyeccion.hp;
+    vida[4] = leche.hp;
+    vida[5] = diaper.hp;
+    vida[6] = cartera.hp;
+    atq[1] = lego.atk;
+    atq[2] = botella.atk;
+    atq[3] = inyeccion.atk;
+    atq[4] = leche.atk;
+    atq[5] = diaper.atk;
+    atq[6] = cartera.atk;
+    vidaDos[1] = lego.hp;
+    vidaDos[2] = botella.hp;
+    vidaDos[3] = inyeccion.hp;
+    vidaDos[4] = leche.hp;
+    vidaDos[5] = diaper.hp;
+    vidaDos[6] = cartera.hp;
+    atqDos[1] = lego.atk;
+    atqDos[2] = botella.atk;
+    atqDos[3] = inyeccion.atk;
+    atqDos[4] = leche.atk;
+    atqDos[5] = diaper.atk;
+    atqDos[6] = cartera.atk;
+  }
+}
+
+personaje lego;
+personaje botella;
+personaje inyeccion;
+personaje leche;
+personaje diaper;
+personaje cartera;
+
+
+class personaje
+{
+  int hp;
+  int atk;
+
+  personaje(int hp_, int atk_)
+  {
+    hp = hp_;
+    atk = atk_;
+  }
+
+  void lego()
+  {
+    if (uno == 1)
+    {
+      fill(255, 0, 0);
+      noStroke();
+      beginShape();
+      vertex(211.5, 250.7);
+      vertex(211.5, 236.9);
+      vertex(182.4, 236.9);
+      vertex(182.4, 250.7);
+      vertex(165.2, 250.7);
+      vertex(165.2, 236.9);
+      vertex(136.1, 236.9);
+      vertex(136.1, 250.7);
+      vertex(118.9, 250.7);
+      vertex(118.9, 236.9);
+      vertex(89.9, 236.9);
+      vertex(89.9, 250.7);
+      vertex(73.3, 250.7);
+      vertex(73.3, 317.5);
+      vertex(228, 317.5);
+      vertex(228, 250.7);
+      vertex(211.5, 250.7);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(118.4, 307.6);
+      bezierVertex(105.3, 307.6, 94.7, 297, 94.7, 283.9);
+      vertex(142.1, 283.9);
+      bezierVertex(142.1, 297, 131.5, 307.6, 118.4, 307.6);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(186.4, 307.6);
+      bezierVertex(173.3, 307.6, 162.7, 297, 162.7, 283.9);
+      vertex(210.1, 283.9);
+      bezierVertex(210.1, 297, 199.5, 307.6, 186.4, 307.6);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(142.1, 283.9);
+      vertex(142.1, 283.9);
+      bezierVertex(142.1, 284.2, 142.1, 284.4, 142.1, 284.7);
+      bezierVertex(142.1, 284.4, 142.1, 284.2, 142.1, 283.9);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(131.6, 295.5);
+      bezierVertex(125.8, 295.5, 121.2, 290.8, 121.2, 285.1);
+      bezierVertex(121.2, 284.7, 121.2, 284.4, 121.3, 284);
+      vertex(94.7, 284);
+      bezierVertex(94.7, 297.1, 105.3, 307.7, 118.4, 307.7);
+      bezierVertex(130.4, 307.7, 140.2, 298.8, 141.8, 287.3);
+      bezierVertex(140.8, 291.9, 136.6, 295.5, 131.6, 295.5);
+      endShape();
+      fill(0);
+      beginShape();
+      vertex(121.3, 283.9);
+      bezierVertex(121.3, 284.3, 121.2, 284.6, 121.2, 285);
+      bezierVertex(121.2, 290.8, 125.9, 295.4, 131.6, 295.4);
+      bezierVertex(137.4, 295.4, 142, 290.7, 142, 285);
+      bezierVertex(142, 284.6, 142, 284.3, 141.9, 283.9);
+      vertex(121.3, 283.9);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(210.1, 283.9);
+      vertex(210.1, 283.9);
+      bezierVertex(210.1, 284.2, 210.1, 284.4, 210.1, 284.7);
+      bezierVertex(210, 284.4, 210.1, 284.2, 210.1, 283.9);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(199.6, 295.5);
+      bezierVertex(193.8, 295.5, 189.2, 290.8, 189.2, 285.1);
+      bezierVertex(189.2, 284.7, 189.2, 284.4, 189.3, 284);
+      vertex(162.8, 284);
+      bezierVertex(162.8, 297.1, 173.4, 307.7, 186.5, 307.7);
+      bezierVertex(198.5, 307.7, 208.3, 298.8, 209.9, 287.3);
+      bezierVertex(208.8, 291.9, 204.6, 295.5, 199.6, 295.5);
+      endShape();
+      fill(0);
+      beginShape();
+      vertex(189.2, 283.9);
+      bezierVertex(189.2, 284.3, 189.1, 284.6, 189.1, 285);
+      bezierVertex(189.1, 290.8, 193.8, 295.4, 199.5, 295.4);
+      bezierVertex(205.2, 295.4, 209.9, 290.7, 209.9, 285);
+      bezierVertex(209.9, 284.6, 209.9, 284.3, 209.8, 283.9);
+      vertex(189.2, 283.9);
+      endShape();
+    }
+    if (dos == 1)
+    {
+      fill(255, 0, 0);
+      noStroke();
+      beginShape();
+      vertex(673.3, 250.7);
+      vertex(673.3, 317.5);
+      vertex(828, 317.5);
+      vertex(828, 250.7);
+      vertex(811.5, 250.7);
+      vertex(811.5, 236.9);
+      vertex(782.4, 236.9);
+      vertex(782.4, 250.7);
+      vertex(765.2, 250.7);
+      vertex(765.2, 236.9);
+      vertex(736.1, 236.9);
+      vertex(736.1, 250.7);
+      vertex(718.9, 250.7);
+      vertex(718.9, 236.9);
+      vertex(689.8, 236.9);
+      vertex(689.8, 250.7);
+      vertex(673.3, 250.7);
+      endShape();
+      beginShape();
+      vertex(759.3, 283.9);
+      vertex(806.7, 283.9);
+      bezierVertex(806.7, 297, 796.1, 307.6, 783, 307.6);
+      bezierVertex(769.9, 307.6, 759.3, 297, 759.3, 283.9);
+      endShape();
+      beginShape();
+      vertex(691.3, 283.9);
+      vertex(738.7, 283.9);
+      bezierVertex(738.7, 297, 728.1, 307.6, 715, 307.6);
+      bezierVertex(701.9, 307.6, 691.3, 297, 691.3, 283.9);
+      endShape();
+      beginShape();
+      vertex(759.3, 283.9);
+      vertex(759.3, 283.9);
+      bezierVertex(759.3, 284.2, 759.3, 284.4, 759.3, 284.7);
+      bezierVertex(759.3, 284.4, 759.3, 284.2, 759.3, 283.9);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(769.7, 295.5);
+      bezierVertex(775.5, 295.5, 780.1, 290.8, 780.1, 285.1);
+      bezierVertex(780.1, 284.7, 780.1, 284.4, 780, 284);
+      vertex(806.5, 284);
+      bezierVertex(806.5, 297.1, 795.9, 307.7, 782.8, 307.7);
+      bezierVertex(770.8, 307.7, 761, 298.8, 759.4, 287.3);
+      bezierVertex(760.5, 291.9, 764.7, 295.5, 769.7, 295.5);
+      endShape();
+      fill(0);
+      beginShape();
+      vertex(780.1, 283.9);
+      bezierVertex(780.1, 284.3, 780.2, 284.6, 780.2, 285);
+      bezierVertex(780.2, 290.8, 775.5, 295.4, 769.8, 295.4);
+      bezierVertex(764, 295.4, 759.4, 290.7, 759.4, 285);
+      bezierVertex(759.4, 284.6, 759.4, 284.3, 759.5, 283.9);
+      vertex(780.1, 283.9);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(691.3, 283.9);
+      vertex(691.3, 283.9);
+      bezierVertex(691.3, 284.2, 691.3, 284.4, 691.3, 284.7);
+      bezierVertex(691.3, 284.4, 691.3, 284.2, 691.3, 283.9);
+      endShape();
+      fill(255);
+      beginShape();
+      vertex(701.7, 295.5);
+      bezierVertex(707.5, 295.5, 712.1, 290.8, 712.1, 285.1);
+      bezierVertex(712.1, 284.7, 712.1, 284.4, 712, 284);
+      vertex(738.5, 284);
+      bezierVertex(738.5, 297.1, 727.9, 307.7, 714.8, 307.7);
+      bezierVertex(702.8, 307.7, 693, 298.8, 691.4, 287.3);
+      bezierVertex(692.5, 291.9, 696.7, 295.5, 701.7, 295.5);
+      endShape();
+      fill(0);
+      beginShape();
+      vertex(712.1, 283.9);
+      bezierVertex(712.1, 284.3, 712.2, 284.6, 712.2, 285);
+      bezierVertex(712.2, 290.8, 707.5, 295.4, 701.8, 295.4);
+      bezierVertex(696.1, 295.4, 691.4, 290.7, 691.4, 285);
+      bezierVertex(691.4, 284.6, 691.4, 284.3, 691.5, 283.9);
+      vertex(712.1, 283.9);
+      endShape();
+    }
+  }
+
+  void botella()
+  {
+    if (uno == 2)
+    {
+      noStroke();
+      fill(69, 138, 76);
+      beginShape();
+      vertex(76.5, 207.5);
+      bezierVertex(78.9, 202.6, 90.5, 190.5, 90.5, 190.5);
+      bezierVertex(90.5, 190.5, 91.5, 189.5, 93.5, 190.5);
+      bezierVertex(95.5, 191.5, 95.2, 193.9, 95.2, 193.9);
+      vertex(126.5, 216.5);
+      bezierVertex(126.5, 216.5, 140.5, 200.5, 161.5, 215.5);
+      bezierVertex(179.6, 228.4, 243.5, 272.5, 243.5, 272.5);
+      vertex(230, 271);
+      vertex(232, 281);
+      vertex(213, 272);
+      vertex(224, 288);
+      vertex(214, 287);
+      vertex(217, 298);
+      vertex(202, 291);
+      vertex(201, 300);
+      vertex(193, 300);
+      vertex(207, 319);
+      vertex(193, 317);
+      vertex(199.5, 331.5);
+      bezierVertex(199.5, 331.5, 119.3, 274.7, 110.5, 266.5);
+      bezierVertex(96.5, 253.5, 112.5, 234.5, 112.5, 234.5);
+      vertex(81, 210.9);
+      bezierVertex(81, 210.9, 78.5, 212.5, 76.5, 210.5);
+      bezierVertex(75.9, 209.9, 76.2, 208.2, 76.5, 207.5);
+      endShape();
+      noFill();
+      stroke(0, 0, 0);
+      line(135, 250, 142, 273);
+      line(126, 262, 153, 262);
+      line(152, 228.5, 159, 251.5);
+      line(143, 240.5, 170, 240.5);
+      fill(214, 169, 156);
+      noStroke();
+      beginShape();
+      vertex(181.1, 259.3);
+      bezierVertex(181.1, 259.3, 191.5, 266.5, 194.5, 262.5);
+      bezierVertex(197.5, 258.5, 187.3, 250.6, 187.3, 250.6);
+      vertex(181.1, 259.3);
+      endShape();
+      noFill();
+      stroke(0, 0, 0);
+      line(169.5, 275.5, 189.5, 247.5);
+    }
+    if (dos == 2)
+    {
+      noStroke();
+      fill(69, 138, 76);
+      beginShape();
+      vertex(845.2, 207.5);
+      bezierVertex(842.8, 202.6, 831.2, 190.5, 831.2, 190.5);
+      bezierVertex(831.2, 190.5, 830.2, 189.5, 828.2, 190.5);
+      bezierVertex(826.2, 191.5, 826.5, 193.9, 826.5, 193.9);
+      vertex(795.2, 216.5);
+      bezierVertex(795.2, 216.5, 781.2, 200.5, 760.2, 215.5);
+      bezierVertex(742.1, 228.4, 678.2, 272.5, 678.2, 272.5);
+      vertex(691.7, 271);
+      vertex(689.7, 281);
+      vertex(708.7, 272);
+      vertex(697.7, 288);
+      vertex(707.7, 287);
+      vertex(704.7, 298);
+      vertex(719.7, 291);
+      vertex(720.7, 300);
+      vertex(728.7, 300);
+      vertex(714.7, 319);
+      vertex(728.7, 317);
+      vertex(722.2, 331.5);
+      bezierVertex(722.2, 331.5, 802.4, 274.7, 811.2, 266.5);
+      bezierVertex(825.2, 253.5, 809.2, 234.5, 809.2, 234.5);
+      vertex(840.7, 210.9);
+      bezierVertex(840.7, 210.9, 843.2, 212.5, 845.2, 210.5);
+      bezierVertex(845.7, 209.9, 845.5, 208.2, 845.2, 207.5);
+      endShape();
+      noFill();
+      stroke(0, 0, 0);
+      line(786.7, 250, 779.7, 273);
+      line(795.7, 262, 768.7, 262);
+      line(769.7, 228.5, 762.7, 251.5);
+      line(778.7, 240.5, 751.7, 240.5);
+      fill(214, 169, 156);
+      noStroke();
+      beginShape();
+      vertex(740.6, 259.3);
+      bezierVertex(740.6, 259.3, 730.2, 266.5, 727.2, 262.5);
+      bezierVertex(724.2, 258.5, 734.4, 250.6, 734.4, 250.6);
+      vertex(740.6, 259.3);
+      endShape();
+      noFill();
+      stroke(0, 0, 0);
+      line(752.2, 275.5, 732.2, 247.5);
+    }
+  }
+
+  void inyeccion()
+  { 
+    if (screen != 4)
+    {
+      noStroke();
+      fill(181, 169, 143);
+      rect(61, 300.6, 1.2, 17.3);
+      fill(199, 191, 175);
+      rect(101.7, 299.4, 101.1, 18.5);
+      fill(181, 169, 143);
+      rect(202.8, 303.7, 9.2, 9.2);
+      fill(181, 169, 143);
+      rect(99.8, 292, 1.8, 33.9);
+      fill(97, 90, 77);
+      rect(62.2, 303.1, 37.6, 11.7);
+      fill(65, 79, 64);
+      rect(212.1, 308, 49.9, 0.6);
+      fill(0);
+      beginShape();
+      vertex(151.7, 302.6);
+      bezierVertex(151.4, 303.6, 151.2, 304.6, 151.1, 305.6);
+      bezierVertex(151.1, 306.6, 151.3, 307.5, 151.9, 308.1);
+      bezierVertex(152.3, 308.6, 152.6, 309.1, 152.8, 309.7);
+      bezierVertex(152.9, 310.3, 152.9, 310.9, 152.9, 311.4);
+      bezierVertex(152.7, 312.5, 152.3, 313.6, 151.7, 314.5);
+      vertex(151.4, 314.4);
+      bezierVertex(151.7, 313.4, 151.9, 312.4, 152, 311.4);
+      bezierVertex(152, 310.4, 151.8, 309.5, 151.2, 308.9);
+      bezierVertex(150.8, 308.4, 150.5, 307.9, 150.3, 307.3);
+      bezierVertex(150.2, 306.7, 150.2, 306.1, 150.2, 305.6);
+      bezierVertex(150.3, 304.5, 150.8, 303.4, 151.4, 302.5);
+      vertex(151.7, 302.6);
+      endShape();
+      noFill();
+      stroke(0, 0, 0);
+      line(145.5, 304.5, 137.5, 304.5);
+      line(145.5, 312.5, 137.5, 312.5);
+    }
+    if (uno == 3)
+    {
+      noStroke();
+      fill(181, 169, 143);
+      rect(61, 300.6, 1.2, 17.3);
+      fill(199, 191, 175);
+      rect(101.7, 299.4, 101.1, 18.5);
+      fill(181, 169, 143);
+      rect(202.8, 303.7, 9.2, 9.2);
+      fill(181, 169, 143);
+      rect(99.8, 292, 1.8, 33.9);
+      fill(97, 90, 77);
+      rect(62.2, 303.1, 37.6, 11.7);
+      fill(65, 79, 64);
+      rect(212.1, 308, 49.9, 0.6);
+      fill(0);
+      beginShape();
+      vertex(151.7, 302.6);
+      bezierVertex(151.4, 303.6, 151.2, 304.6, 151.1, 305.6);
+      bezierVertex(151.1, 306.6, 151.3, 307.5, 151.9, 308.1);
+      bezierVertex(152.3, 308.6, 152.6, 309.1, 152.8, 309.7);
+      bezierVertex(152.9, 310.3, 152.9, 310.9, 152.9, 311.4);
+      bezierVertex(152.7, 312.5, 152.3, 313.6, 151.7, 314.5);
+      vertex(151.4, 314.4);
+      bezierVertex(151.7, 313.4, 151.9, 312.4, 152, 311.4);
+      bezierVertex(152, 310.4, 151.8, 309.5, 151.2, 308.9);
+      bezierVertex(150.8, 308.4, 150.5, 307.9, 150.3, 307.3);
+      bezierVertex(150.2, 306.7, 150.2, 306.1, 150.2, 305.6);
+      bezierVertex(150.3, 304.5, 150.8, 303.4, 151.4, 302.5);
+      vertex(151.7, 302.6);
+      endShape();
+      noFill();
+      stroke(0, 0, 0);
+      line(145.5, 304.5, 137.5, 304.5);
+      line(145.5, 312.5, 137.5, 312.5);
+    }
+    if (dos == 3)
+    {
+      fill(#615A4D);
+      noStroke();
+      rect(829.8, 300.6, 1.2, 17.3);
+      fill(#C7BFAF);
+      rect(689.2, 299.4, 101.1, 18.5);
+      rect(679.9, 303.7, 9.2, 9.2); 
+      fill(#B5A98F);
+      rect(790.3, 292, 1.8, 33.9);
+      rect(792.2, 303.1, 37.6, 11.7);
+      fill(#C7BFAF);
+      rect(630, 308, 49.9, 0.6);
+      fill(0);
+      beginShape();
+      vertex(740.7, 302.4);
+      bezierVertex(741.3, 303.3, 741.7, 304.4, 741.9, 305.5);
+      bezierVertex(742, 306.1, 742, 306.7, 741.8, 307.2);
+      bezierVertex(741.7, 307.8, 741.4, 308.4, 740.9, 308.8);
+      bezierVertex(740.3, 309.4, 740.1, 310.3, 740.1, 311.3);
+      bezierVertex(740.1, 312.3, 740.4, 313.3, 740.7, 314.3);
+      vertex(740.4, 314.4);
+      bezierVertex(739.8, 313.5, 739.4, 312.5, 739.2, 311.3);
+      bezierVertex(739.1, 310.7, 739.1, 310.1, 739.3, 309.6);
+      bezierVertex(739.4, 309, 739.7, 308.4, 740.2, 308);
+      bezierVertex(740.8, 307.4, 741, 306.5, 741, 305.5);
+      bezierVertex(741, 304.5, 740.7, 303.5, 740.4, 302.5);
+      vertex(740.7, 302.4);
+      endShape();
+      strokeWeight(2);
+      stroke(0);
+      line(746.5, 304.5, 754.5, 304.5);
+      line(746.5, 312.5, 754.5, 312.5);
+    }
+  }
+
+  void leche()
+  {
+    if (uno == 4)
+    {
+      noStroke();
+      fill(140, 150, 141);
+      rect(91, 243.5, 38, 131);
+      fill(140, 150, 141);
+      beginShape();
+      vertex(128.5, 244);
+      vertex(128.5, 374);
+      vertex(91.5, 374);
+      vertex(91.5, 244);
+      vertex(128.5, 244);
+      endShape();
+      beginShape();
+      vertex(129.5, 243);
+      vertex(90.5, 243);
+      vertex(90.5, 375);
+      vertex(129.5, 375);
+      vertex(129.5, 243);
+      vertex(129.5, 243);
+      endShape();
+      fill(179, 191, 180);
+      rect(130, 243.5, 56, 131);
+      fill(140, 150, 141);
+      beginShape();
+      vertex(185.5, 244);
+      vertex(185.5, 374);
+      vertex(130.5, 374);
+      vertex(130.5, 244);
+      vertex(185.5, 244);
+      endShape();
+      beginShape();
+      vertex(186.5, 243);
+      vertex(129.5, 243);
+      vertex(129.5, 375);
+      vertex(186.5, 375);
+      vertex(186.5, 243);
+      vertex(186.5, 243);
+      endShape();
+      fill(201, 214, 202);
+      beginShape();
+      vertex(92.2, 243);
+      vertex(123.2, 213);
+      vertex(157.8, 213);
+      vertex(185.8, 243);
+      endShape(CLOSE);
+      fill(140, 150, 141);
+      beginShape();
+      vertex(157.6, 213.5);
+      vertex(184.7, 242.5);
+      vertex(93.5, 242.5);
+      vertex(123.4, 213.5);
+      vertex(157.6, 213.5);
+      endShape();
+      beginShape();
+      vertex(158, 212.5);
+      vertex(123, 212.5);
+      vertex(91, 243.5);
+      vertex(187, 243.5);
+      vertex(158, 212.5);
+      vertex(158, 212.5);
+      endShape();
+      noFill();
+      stroke(140, 150, 141);
+      line(158, 212.5, 129, 244.5);
+      fill(53, 128, 59);
+      noStroke();
+      beginShape();
+      vertex(173, 154.5);
+      bezierVertex(173, 154.5, 176, 170.5, 167, 183.5);
+      bezierVertex(158, 196.5, 173, 212.5, 173, 212.5);
+      bezierVertex(173, 212.5, 171, 194.5, 179, 183.5);
+      bezierVertex(187, 172.5, 173, 154.5, 173, 154.5);
+      endShape();
+      beginShape();
+      vertex(155.1, 169.5);
+      bezierVertex(155.1, 169.5, 157.3, 181.5, 150.6, 191.2);
+      bezierVertex(143.9, 200.9, 155.1, 212.9, 155.1, 212.9);
+      bezierVertex(155.1, 212.9, 153.6, 199.4, 159.6, 191.2);
+      bezierVertex(165.6, 183, 155.1, 169.5, 155.1, 169.5);
+      endShape();
+      beginShape();
+      vertex(138.1, 162.5);
+      bezierVertex(138.1, 162.5, 139.7, 174.5, 135, 184.2);
+      bezierVertex(130.3, 193.9, 138.1, 205.9, 138.1, 205.9);
+      bezierVertex(138.1, 205.9, 137.1, 192.4, 141.2, 184.2);
+      bezierVertex(145.3, 176, 138.1, 162.5, 138.1, 162.5);
+      endShape();
+    }
+    if (dos == 4)
+    {
+      noStroke();
+      fill(140, 150, 141);
+      rect(777.5, 243.5, 38, 131);
+      fill(140, 150, 141);
+      beginShape();
+      vertex(815, 244);
+      vertex(815, 374);
+      vertex(778, 374);
+      vertex(778, 244);
+      vertex(815, 244);
+      endShape();
+      beginShape();
+      vertex(816, 243);
+      vertex(777, 243);
+      vertex(777, 375);
+      vertex(816, 375);
+      vertex(816, 243);
+      vertex(816, 243);
+      endShape();
+      fill(179, 191, 180);
+      rect(720.5, 243.5, 56, 131);
+      fill(140, 150, 141);
+      beginShape();
+      vertex(776, 244);
+      vertex(776, 374);
+      vertex(721, 374);
+      vertex(721, 244);
+      vertex(776, 244);
+      endShape();
+      beginShape();
+      vertex(777, 243);
+      vertex(720, 243);
+      vertex(720, 375);
+      vertex(777, 375);
+      vertex(777, 243);
+      vertex(777, 243);
+      endShape();
+      fill(201, 214, 202);
+      beginShape();
+      vertex(720.7, 243);
+      vertex(748.7, 213);
+      vertex(783.3, 213);
+      vertex(814.3, 243);
+      endShape(CLOSE);
+      fill(140, 150, 141);
+      beginShape();
+      vertex(783.1, 213.5);
+      vertex(813, 242.5);
+      vertex(721.8, 242.5);
+      vertex(748.9, 213.5);
+      vertex(783.1, 213.5);
+      endShape();
+      beginShape();
+      vertex(783.5, 212.5);
+      vertex(748.5, 212.5);
+      vertex(719.5, 243.5);
+      vertex(815.5, 243.5);
+      vertex(783.5, 212.5);
+      vertex(783.5, 212.5);
+      endShape();
+      noFill();
+      stroke(140, 150, 141);
+      line(748.5, 212.5, 777.5, 244.5);
+      fill(53, 128, 59);
+      noStroke();
+      beginShape();
+      vertex(733.5, 154.5);
+      bezierVertex(733.5, 154.5, 730.5, 170.5, 739.5, 183.5);
+      bezierVertex(748.5, 196.5, 733.5, 212.5, 733.5, 212.5);
+      bezierVertex(733.5, 212.5, 735.5, 194.5, 727.5, 183.5);
+      bezierVertex(719.5, 172.5, 733.5, 154.5, 733.5, 154.5);
+      endShape();
+      beginShape();
+      vertex(751.4, 169.5);
+      bezierVertex(751.4, 169.5, 749.2, 181.5, 755.9, 191.2);
+      bezierVertex(762.6, 200.9, 751.4, 212.9, 751.4, 212.9);
+      bezierVertex(751.4, 212.9, 752.9, 199.4, 746.9, 191.2);
+      bezierVertex(740.9, 183, 751.4, 169.5, 751.4, 169.5);
+      endShape();
+      beginShape();
+      vertex(768.4, 162.5);
+      bezierVertex(768.4, 162.5, 766.8, 174.5, 771.5, 184.2);
+      bezierVertex(776.2, 193.9, 768.4, 205.9, 768.4, 205.9);
+      bezierVertex(768.4, 205.9, 769.4, 192.4, 765.3, 184.2);
+      bezierVertex(761.2, 176, 768.4, 162.5, 768.4, 162.5);
+      endShape();
+    }
+  }
+
+  void diaper()
+  {
+    if (uno == 5)
+    {
+      noStroke();
+      fill(204, 204, 204);
+      beginShape();
+      vertex(183.4, 257);
+      vertex(175, 257);
+      vertex(175, 252);
+      vertex(181.9, 251.3);
+      bezierVertex(180.6, 247.1, 178.7, 243.7, 176.5, 241.5);
+      bezierVertex(167.5, 233, 133, 227.5, 120.5, 235.5);
+      bezierVertex(119.4, 236.2, 118.2, 237.2, 117, 238.5);
+      bezierVertex(117, 238.5, 117, 238.5, 117, 238.5);
+      vertex(134, 244);
+      vertex(129, 250);
+      bezierVertex(125, 252, 111.1, 246.6, 111.1, 246.6);
+      bezierVertex(111.1, 246.6, 111.1, 246.6, 111.1, 246.6);
+      bezierVertex(104.4, 258.9, 101.9, 277.5, 119.5, 289.5);
+      bezierVertex(144.5, 306.5, 169.5, 301.9, 178.5, 292.5);
+      bezierVertex(184.5, 286.2, 185.9, 269.9, 183.4, 257);
+      endShape();
+      fill(255, 244, 199);
+      beginShape();
+      vertex(117, 238.5);
+      bezierVertex(117, 238.5, 109.2, 242.3, 111.1, 246.7);
+      bezierVertex(111.1, 246.7, 125, 252.1, 129, 250.1);
+      vertex(134, 244.1);
+      vertex(117, 238.5);
+      endShape();
+      beginShape();
+      vertex(175, 252);
+      vertex(175, 257);
+      vertex(183.4, 257);
+      bezierVertex(183.4, 257, 184.9, 253.6, 182, 251.3);
+      vertex(175, 252);
+      endShape();
+      fill(232, 232, 232);
+      beginShape();
+      vertex(119.5, 289.5);
+      bezierVertex(144.5, 306.5, 169.5, 301.9, 178.5, 292.5);
+      bezierVertex(183.7, 287.1, 185.4, 274.5, 184.2, 262.8);
+      bezierVertex(184.2, 262.8, 184.2, 262.8, 184.2, 262.8);
+      bezierVertex(184.2, 265.9, 184, 269, 183, 268);
+      bezierVertex(180.6, 265.6, 180.1, 259.4, 180, 257);
+      bezierVertex(180, 257, 180, 257, 180, 257);
+      vertex(175, 257);
+      vertex(175, 252);
+      vertex(181.9, 251.3);
+      bezierVertex(180.6, 247.1, 178.7, 243.7, 176.5, 241.5);
+      bezierVertex(167.5, 233, 133, 227.5, 120.5, 235.5);
+      bezierVertex(119.4, 236.2, 118.2, 237.2, 117, 238.5);
+      bezierVertex(117, 238.5, 117, 238.5, 117, 238.5);
+      vertex(134, 244);
+      vertex(129, 250);
+      bezierVertex(127.9, 250.6, 125.9, 250.5, 123.7, 250.2);
+      bezierVertex(123.7, 250.2, 123.7, 250.2, 123.7, 250.2);
+      bezierVertex(122.2, 253.8, 119.8, 259.5, 118, 263);
+      bezierVertex(116, 267, 111, 247, 111, 247);
+      vertex(103, 250);
+      vertex(110.9, 247.1);
+      bezierVertex(104.3, 259.3, 102.1, 277.7, 119.5, 289.5);
+      endShape();
+      fill(204, 204, 204);
+      beginShape();
+      vertex(131, 261.9);
+      bezierVertex(134.2, 263.2, 137.4, 264.6, 140.7, 265.8);
+      bezierVertex(143.9, 267, 147.2, 268.4, 150.4, 269.1);
+      bezierVertex(152, 269.4, 153.7, 269.4, 155.4, 269.3);
+      bezierVertex(157.1, 269.2, 158.8, 269.1, 160.6, 268.9);
+      vertex(171, 267.8);
+      vertex(171, 268);
+      bezierVertex(167.6, 268.8, 164.2, 269.5, 160.7, 270);
+      bezierVertex(159, 270.3, 157.2, 270.5, 155.5, 270.6);
+      bezierVertex(153.8, 270.7, 152, 270.8, 150.1, 270.4);
+      bezierVertex(148.3, 270, 146.7, 269.4, 145, 268.8);
+      bezierVertex(143.4, 268.2, 141.8, 267.5, 140.2, 266.7);
+      bezierVertex(137, 265.2, 133.9, 263.7, 130.9, 261.9);
+      vertex(131, 261.9);
+      endShape();
+      fill(204, 204, 204);
+      beginShape();
+      vertex(128, 277);
+      bezierVertex(131.5, 278.3, 134.8, 279.7, 138.2, 281.1);
+      bezierVertex(139.9, 281.8, 141.6, 282.5, 143.3, 283.1);
+      bezierVertex(145, 283.7, 146.7, 284.4, 148.3, 284.7);
+      bezierVertex(149.9, 285, 151.7, 285, 153.5, 285);
+      bezierVertex(155.3, 285, 157.1, 285, 159, 284.9);
+      bezierVertex(162.7, 284.8, 166.3, 284.7, 170, 284.7);
+      vertex(170, 285);
+      bezierVertex(166.4, 285.9, 162.8, 286.5, 159.1, 286.9);
+      bezierVertex(157.3, 287.1, 155.4, 287.2, 153.6, 287.3);
+      bezierVertex(151.7, 287.4, 149.9, 287.4, 147.9, 287.1);
+      bezierVertex(145.9, 286.7, 144.2, 285.9, 142.5, 285.2);
+      bezierVertex(140.8, 284.4, 139.1, 283.6, 137.5, 282.7);
+      bezierVertex(134.1, 281.1, 131, 279.2, 128, 277);
+      vertex(128, 277);
+      endShape();
+      fill(105, 53, 33);
+      beginShape();
+      vertex(130.1, 183.5);
+      bezierVertex(130.1, 183.5, 131.7, 195.5, 127, 205.2);
+      bezierVertex(122.3, 214.9, 130.1, 226.9, 130.1, 226.9);
+      bezierVertex(130.1, 226.9, 129.1, 213.4, 133.2, 205.2);
+      bezierVertex(137.3, 197, 130.1, 183.5, 130.1, 183.5);
+      endShape();
+      beginShape();
+      vertex(151.8, 199.4);
+      bezierVertex(151.8, 199.4, 152.9, 208.1, 149.6, 215.1);
+      bezierVertex(146.3, 222.1, 151.8, 230.8, 151.8, 230.8);
+      bezierVertex(151.8, 230.8, 151.1, 221, 154, 215.1);
+      bezierVertex(157.1, 209.2, 151.8, 199.4, 151.8, 199.4);
+      endShape();
+      beginShape();
+      vertex(171.8, 183.4);
+      bezierVertex(171.8, 183.4, 172.9, 192.1, 169.6, 199.1);
+      bezierVertex(166.3, 206.1, 171.8, 214.8, 171.8, 214.8);
+      bezierVertex(171.8, 214.8, 171.1, 205, 174, 199.1);
+      bezierVertex(177.1, 193.2, 171.8, 183.4, 171.8, 183.4);
+      endShape();
+    }
+    if (dos == 5)
+    {
+      noStroke();
+      fill(204, 204, 204);
+      beginShape();
+      vertex(729.2, 257);
+      vertex(737.6, 257);
+      vertex(737.6, 252);
+      vertex(730.7, 251.3);
+      bezierVertex(732, 247.1, 733.9, 243.7, 736.1, 241.5);
+      bezierVertex(745.1, 233, 779.6, 227.5, 792.1, 235.5);
+      bezierVertex(793.2, 236.2, 794.4, 237.2, 795.6, 238.5);
+      bezierVertex(795.6, 238.5, 795.6, 238.5, 795.6, 238.5);
+      vertex(778.6, 244);
+      vertex(783.6, 250);
+      bezierVertex(787.6, 252, 801.5, 246.6, 801.5, 246.6);
+      bezierVertex(801.5, 246.6, 801.5, 246.6, 801.5, 246.6);
+      bezierVertex(808.2, 258.9, 810.7, 277.5, 793.1, 289.5);
+      bezierVertex(768.1, 306.5, 743.1, 301.9, 734.1, 292.5);
+      bezierVertex(728, 286.2, 726.7, 269.9, 729.2, 257);
+      endShape();
+      fill(255, 244, 199);
+      beginShape();
+      vertex(795.6, 238.5);
+      bezierVertex(795.6, 238.5, 803.4, 242.3, 801.5, 246.7);
+      bezierVertex(801.5, 246.7, 787.6, 252.1, 783.6, 250.1);
+      vertex(778.6, 244.1);
+      vertex(795.6, 238.5);
+      endShape();
+      beginShape();
+      vertex(737.6, 252);
+      vertex(737.6, 257);
+      vertex(729.2, 257);
+      bezierVertex(729.2, 257, 727.7, 253.6, 730.6, 251.3);
+      vertex(737.6, 252);
+      endShape();
+      fill(232, 232, 232);
+      beginShape();
+      vertex(793.1, 289.5);
+      bezierVertex(768.1, 306.5, 743.1, 301.9, 734.1, 292.5);
+      bezierVertex(728.9, 287.1, 727.2, 274.5, 728.4, 262.8);
+      bezierVertex(728.4, 262.8, 728.4, 262.8, 728.4, 262.8);
+      bezierVertex(728.4, 265.9, 728.6, 269, 729.6, 268);
+      bezierVertex(732, 265.6, 732.5, 259.4, 732.6, 257);
+      bezierVertex(732.6, 257, 732.6, 257, 732.6, 257);
+      vertex(737.6, 257);
+      vertex(737.6, 252);
+      vertex(730.7, 251.3);
+      bezierVertex(732, 247.1, 733.9, 243.7, 736.1, 241.5);
+      bezierVertex(745.1, 233, 779.6, 227.5, 792.1, 235.5);
+      bezierVertex(793.2, 236.2, 794.4, 237.2, 795.6, 238.5);
+      bezierVertex(795.6, 238.5, 795.6, 238.5, 795.6, 238.5);
+      vertex(778.6, 244);
+      vertex(783.6, 250);
+      bezierVertex(784.7, 250.6, 786.7, 250.5, 788.9, 250.2);
+      bezierVertex(788.9, 250.2, 788.9, 250.2, 788.9, 250.2);
+      bezierVertex(790.4, 253.8, 792.8, 259.5, 794.6, 263);
+      bezierVertex(796.6, 267, 801.6, 247, 801.6, 247);
+      vertex(809.6, 250);
+      vertex(801.7, 247.1);
+      bezierVertex(808.2, 259.3, 810.5, 277.7, 793.1, 289.5);
+      endShape();
+      fill(204, 204, 204);
+      beginShape();
+      vertex(781.6, 262.1);
+      bezierVertex(778.6, 263.8, 775.5, 265.4, 772.3, 266.9);
+      bezierVertex(770.7, 267.6, 769.1, 268.3, 767.5, 269);
+      bezierVertex(765.9, 269.6, 764.2, 270.2, 762.4, 270.6);
+      bezierVertex(760.6, 271, 758.8, 270.9, 757, 270.8);
+      bezierVertex(755.2, 270.7, 753.5, 270.5, 751.8, 270.2);
+      bezierVertex(748.3, 269.7, 744.9, 269, 741.5, 268.2);
+      vertex(741.5, 268);
+      vertex(752, 269);
+      bezierVertex(753.7, 269.2, 755.4, 269.3, 757.2, 269.4);
+      bezierVertex(758.9, 269.5, 760.6, 269.5, 762.2, 269.2);
+      bezierVertex(765.5, 268.5, 768.7, 267.1, 771.9, 265.9);
+      bezierVertex(775.1, 264.6, 778.3, 263.3, 781.6, 262);
+      vertex(781.6, 262.1);
+      endShape();
+      fill(204, 204, 204);
+      beginShape();
+      vertex(784.6, 277);
+      bezierVertex(781.6, 279.2, 778.4, 281.1, 775.2, 282.8);
+      bezierVertex(773.6, 283.7, 771.9, 284.5, 770.2, 285.3);
+      bezierVertex(768.5, 286, 766.8, 286.8, 764.8, 287.2);
+      bezierVertex(762.8, 287.5, 760.9, 287.5, 759.1, 287.4);
+      bezierVertex(757.2, 287.3, 755.4, 287.2, 753.6, 287);
+      bezierVertex(749.9, 286.6, 746.3, 286, 742.7, 285.1);
+      vertex(742.7, 284.8);
+      bezierVertex(746.4, 284.8, 750.1, 284.9, 753.7, 285);
+      bezierVertex(755.5, 285, 757.3, 285.1, 759.2, 285.1);
+      bezierVertex(761, 285.1, 762.8, 285.1, 764.4, 284.8);
+      bezierVertex(766, 284.5, 767.7, 283.8, 769.4, 283.2);
+      bezierVertex(771.1, 282.6, 772.8, 281.8, 774.5, 281.2);
+      bezierVertex(777.7, 279.7, 781.1, 278.3, 784.6, 277);
+      vertex(784.6, 277);
+      endShape();
+      fill(105, 53, 33);
+      beginShape();
+      vertex(782.5, 183.5);
+      bezierVertex(782.5, 183.5, 780.9, 195.5, 785.6, 205.2);
+      bezierVertex(790.3, 214.9, 782.5, 226.9, 782.5, 226.9);
+      bezierVertex(782.5, 226.9, 783.5, 213.4, 779.4, 205.2);
+      bezierVertex(775.3, 197, 782.5, 183.5, 782.5, 183.5);
+      endShape();
+      beginShape();
+      vertex(760.8, 199.4);
+      bezierVertex(760.8, 199.4, 759.7, 208.1, 763, 215.1);
+      bezierVertex(766.4, 222.1, 760.8, 230.8, 760.8, 230.8);
+      bezierVertex(760.8, 230.8, 761.5, 221, 758.6, 215.1);
+      bezierVertex(755.5, 209.2, 760.8, 199.4, 760.8, 199.4);
+      endShape();
+      beginShape();
+      vertex(740.8, 183.4);
+      bezierVertex(740.8, 183.4, 739.7, 192.1, 743, 199.1);
+      bezierVertex(746.4, 206.1, 740.8, 214.8, 740.8, 214.8);
+      bezierVertex(740.8, 214.8, 741.5, 205, 738.6, 199.1);
+      bezierVertex(735.5, 193.2, 740.8, 183.4, 740.8, 183.4);
+      endShape();
+    }
+  }
+
+  void cartera()
+  {
+    if (uno == 6)
+    {
+      noStroke();
+      fill(77, 58, 35);
+      beginShape();
+      vertex(82.7, 254.8);
+      vertex(214.5, 185);
+      vertex(214.5, 260.8);
+      vertex(163.5, 300.5);
+      vertex(82.7, 337.5);
+      endShape(CLOSE);
+      fill(23, 17, 10);
+      beginShape();
+      vertex(90.5, 255.5);
+      vertex(207.5, 194.5);
+      vertex(156.5, 242.5);
+      endShape(CLOSE);
+    }
+    if (dos == 6)
+    {
+      noStroke();
+      fill(77, 58, 35);
+      beginShape();
+      vertex(816.5, 254.8);
+      vertex(684.7, 185);
+      vertex(684.7, 260.8);
+      vertex(735.7, 300.5);
+      vertex(816.5, 337.5);
+      endShape(CLOSE);
+      fill(23, 17, 10);
+      beginShape();
+      vertex(808.7, 255.5);
+      vertex(691.7, 194.5);
+      vertex(742.7, 242.5);
+      endShape(CLOSE);
+    }
+  }
+}
+void colorear()
+{
+  if ((mouseX >= x & mouseX <= x+w) && (mouseY >= y & mouseY <= y+h))
+  {
+    colorButton = #D1D2D3;
+  } else
+  {
+    colorButton = #348CF5;
+  }
+}
+
+
+void rectangulos()
+{
+  fill(c1);
+  rect(150, 100, 150, 150);
+  fill(c2);
+  rect(350, 100, 150, 150);
+  fill(c3);
+  rect(550, 100, 150, 150);
+  fill(c4);
+  rect(250, 300, 150, 150);
+  fill(c5);
+  rect(450, 300, 150, 150);
+  fill(c6);
+  rect(650, 300, 150, 150);
+  eleccion();
+ 
+  
+}
+
+void eleccion()
+{
+  textAlign(CENTER);
+  textSize(15);
+  fill(#FFFFFF);
+  text("Usa las flechas IZQ y DER para elegir un personaje, después presiona ENTER para seleccionarlo", 50, 50, 800, 50);
+  switch(c)
+  {
+  case 0:
+    c = 6;
+    c1 = #FFFFFF;
+    c2 = #FFFFFF;
+    c3 = #FFFFFF;
+    c4 = #FFFFFF;
+    c5 = #FFFFFF;
+
+    break;
+
+  case 1:
+
+    c1 = #F70000;
+    c2 = #FFFFFF;
+    c3 = #FFFFFF;
+    c4 = #FFFFFF;
+    c5 = #FFFFFF;
+    c6 = #FFFFFF;
+    nombre = "Indifferent LEGO block";
+    fill(#FFFFFF);
+    textSize(40);
+    text(nombre, 450, 530);
+    break;
+
+  case 2:
+    c2 = #00980B;
+    c1 = #FFFFFF;
+    c3 = #FFFFFF;
+    c4 = #FFFFFF;
+    c5 = #FFFFFF;
+    c6 = #FFFFFF;
+    nombre = "Drunk broken bottle";
+    fill(#FFFFFF);
+    textSize(40);
+    text(nombre, 450, 530);
+
+    break;
+
+  case 3:
+    c3 = #F2E8C1;
+    c1 = #FFFFFF;
+    c2 = #FFFFFF;
+    c4 = #FFFFFF;
+    c5 = #FFFFFF;
+    c6 = #FFFFFF;
+    nombre = "Infected needle";
+    fill(#FFFFFF);
+    textSize(40);
+    text(nombre, 450, 530);
+    break;
+
+  case 4:
+    c4 = #BAC4D3;
+    c1 = #FFFFFF;
+    c2 = #FFFFFF;
+    c3 = #FFFFFF;
+    c5 = #FFFFFF;
+    c6 = #FFFFFF;
+    nombre = "Rotten milk";
+    fill(#FFFFFF);
+    textSize(40);
+    text(nombre, 450, 530);
+    break;
+
+  case 5:
+    c5 = #C3E367;
+    c1 = #FFFFFF;
+    c2 = #FFFFFF;
+    c3 = #FFFFFF;
+    c4 = #FFFFFF;
+    c6 = #FFFFFF;
+    nombre = "Dirty diaper";
+    fill(#FFFFFF);
+    textSize(40);
+    text(nombre, 450, 530);
+    break;
+
+  case 6:
+    c6 = #764700;
+    c1 = #FFFFFF;
+    c2 = #FFFFFF;
+    c3 = #FFFFFF;
+    c4 = #FFFFFF;
+    c5 = #FFFFFF;
+    nombre = "Empty wallet";
+    fill(#FFFFFF);
+    textSize(40);
+    text(nombre, 450, 530);
+    break;
+
+  case 7:
+    c = 1;
+    c2 = #FFFFFF;
+    c3 = #FFFFFF;
+    c4 = #FFFFFF;
+    c5 = #FFFFFF;
+    c6 = #FFFFFF;
+    break;
+  }
+}
+void keyReleased()
+{
+  if (keyCode == RIGHT)
+  {
+    c++;
+  }
+  if (keyCode == LEFT)
+  {
+    c--;
+  }
+  if (screen == 3)
+  {
+    if (uno == 0 & key == ENTER)
+    {
+      uno = c;
+      key = 'a';
+    }
+    if ( dos == 0 & key == ENTER)
+    {
+      dos = c;
+    }
+  }
+}
+
+void ruleta()
+{
+
+  pushMatrix();
+  beginShape();
+  fill(#D1D2D3);
+  rect(x, y-70, w, h);
+  fill(0);
+  textSize(30);
+  text("GIRAR", 450, 465);
+  fill(colorButton);
+  rect(x, y, w, h);
+  fill(0);
+  textSize(30);
+  text("ATACAR", 450, 535);
+  endShape();
+  popMatrix();
+  strokeWeight(3);
+  stroke(#FFFFFF);
+  pushMatrix();
+  translate(width/2, 200);
+  beginShape();
+  vertex(0, -101);
+  vertex(-10, -115);
+  vertex(10, -115);
+  endShape(CLOSE);
+  rotate(radians(pos));
+  ellipseMode(CENTER);
+  ellipse(0, 0, 200, 200);
+  line(0, 0, 0, -100);
+  line(0, 0, 95, -32);
+  line(0, 0, 59, 81);
+  line(0, 0, -59, 81);
+  line(0, 0, -95, -32);
+  popMatrix();
+  if(turn == 2)
+  {
+   text("Jugador 1 ataca",width/4, 500); 
+  }
+  else
+  {
+   text("Jugador 2 ataca",675, 500); 
+  }
+
+  giro();
+  resultao();
+}
+
+void giro() {
+  pos += vel;
+  vel *= dacel;
+
+  if (((mousePressed) & (mouseX >= 375 & mouseX <= 525) && (mouseY >= 430 & mouseY <= 480)))
+  {
+
+
+    vel += acel;
+  }
+  if (vel <= 0.1) {
+    vel = 0;
+  }
+  if (pos >= 360) {
+    pos = 0;
+  }
+}
+
+void resultao() {
+  if (pos >= 0 & pos <= 72) {
+    fill(0);
+    text("ataque -5", width/2, 400);
+    if (turn == 1)
+    {
+      suerte = -5;
+    }
+    if(turn ==2)
+    {
+     suerte = -5; 
+    }
+  }
+  if (pos >= 73 & pos <= 144) {
+    fill(0);
+    text("ataque -2", width/2, 400);
+    if (turn == 1)
+    {
+      suerte = -2;
+    }
+    if(turn ==2)
+    {
+     suerte = -2; 
+    }
+  }
+  if (pos >= 145 & pos <= 216) {
+    fill(0);
+    text("ataque +0", width/2, 400);
+    if (turn == 1)
+    {
+      suerte = 0;
+    }
+    if(turn ==2)
+    {
+     suerte = 0; 
+    }
+    
+  }
+  if (pos >= 217 & pos <= 288) {
+    fill(0);
+    text("ataque +2", width/2, 400);
+    if (turn == 1)
+    {
+      suerte = 2;
+    }
+    if(turn ==2)
+    {
+     suerte = 2; 
+    }
+  }
+  if (pos >= 289 & pos < 360) {
+    fill(0);
+    text("ataque +5", width/2, 400);
+    if (turn == 1)
+    {
+      suerte = 5;
+    }
+    if(turn ==2)
+    {
+     suerte = 5; 
+    }
+  }
+}
+
+void atacar()
+{
+  if (turn == 1)
+  {
+    vidaDos[dos] -= atq[uno];
+    if(vidaDos[dos] <= 0)
+    {
+     screen++; 
+    }
+    if(vidaDos[dos] >= 140)
+    {
+     screen++; 
+    }
+  }
+  if (turn == 2)
+    vida[uno] -= atqDos[dos];
+    if(vida[uno] <= 0)
+    {
+     screen++; 
+    }
+    if(vida[uno] >= 140)
+    {
+     screen++; 
+    }
+}
+
+
+
+void turno()
+{
+
+  if (turn == 1)
+  {
+    
+    turn = 2;
+    
+  } else
+  {
+    turn = 1; 
+   
+  }
+}
